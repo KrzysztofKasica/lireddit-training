@@ -1,6 +1,6 @@
 import { User } from "../entities/User";
 import { MyContext } from "src/types";
-import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Resolver } from "type-graphql";
 import argon2 from "argon2";
 @InputType()
 class UsernamePasswordInput {
@@ -76,7 +76,7 @@ class UserResponse {
     @Mutation(() => UserResponse)
     async login(
         @Arg('options') options: UsernamePasswordInput,
-        @Ctx() {em}: MyContext
+        @Ctx() {em, req,}: MyContext
     ): Promise<UserResponse> {
         const user = await em.fork().findOne(User, {username: options.username});
         if (!user) {
@@ -96,7 +96,7 @@ class UserResponse {
                 }]
             };
         }
-
+        req.session!.userId = user.id;
         return {user};
     }
  }
