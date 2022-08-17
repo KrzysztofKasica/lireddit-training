@@ -96,7 +96,7 @@ class UserResponse {
                 }]
             };
         }
-        req.session!.userId = user.id;
+        req.session.userId = user.id;
         return {user};
     }
  }
